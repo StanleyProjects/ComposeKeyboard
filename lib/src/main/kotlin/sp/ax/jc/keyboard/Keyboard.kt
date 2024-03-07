@@ -1,30 +1,23 @@
 package sp.ax.jc.keyboard
 
 import androidx.compose.foundation.Indication
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +25,48 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+
+@Composable
+private fun KeyboardSpaceRow(
+    indication: Indication,
+    height: Dp,
+    enabled: Boolean,
+    onClick: () -> Unit,
+    textStyle: TextStyle,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(height),
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        val interactionSource = remember { MutableInteractionSource() }
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(3f)
+                .clicks(
+                    enabled = enabled,
+                    interactionSource = interactionSource,
+                    indication = indication,
+                    onClick = {
+                        onClick()
+                    },
+                    onLongClick = {
+                        // noop
+                    },
+                ),
+        ) {
+            BasicText(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                text = "space",
+                style = textStyle,
+            )
+        }
+        Spacer(modifier = Modifier.weight(1f))
+    }
+}
 
 @Composable
 private fun KeyboardRow(
@@ -50,11 +85,6 @@ private fun KeyboardRow(
     ) {
         for (char in chars) {
             val interactionSource = remember { MutableInteractionSource() }
-            val onClickState = rememberUpdatedState(onClick)
-            val lastPressState = getLastPressState(
-                enabled = enabled,
-                interactionSource = interactionSource,
-            )
             Box(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -65,26 +95,17 @@ private fun KeyboardRow(
                         .fillMaxHeight()
                         .width(height)
                         .align(Alignment.Center)
-                        .indication(interactionSource = interactionSource, indication = indication)
-                        .pointerInput(interactionSource, enabled) {
-                            detectTapGestures(
-                                onPress = { offset ->
-                                    if (enabled) {
-                                        onPress(
-                                            offset = offset,
-                                            lastPressState = lastPressState,
-                                            interactionSource = interactionSource,
-                                        )
-                                    }
-                                },
-                                onLongPress = {
-                                    if (enabled) onClickState.value(char.uppercaseChar())
-                                },
-                                onTap = {
-                                    if (enabled) onClickState.value(char)
-                                },
-                            )
-                        },
+                        .clicks(
+                            enabled = enabled,
+                            interactionSource = interactionSource,
+                            indication = indication,
+                            onClick = {
+                                onClick(char)
+                            },
+                            onLongClick = {
+                                onClick(char.uppercaseChar())
+                            },
+                        ),
                 ) {
                     BasicText(
                         modifier = Modifier
@@ -135,7 +156,15 @@ fun Keyboard(
                     textStyle = textStyle,
                 )
             }
-
+            KeyboardSpaceRow(
+                indication = indication,
+                height = 42.dp,
+                enabled = enabled,
+                onClick = {
+                    onClick(' ')
+                },
+                textStyle = textStyle,
+            )
         }
     }
 }
