@@ -16,11 +16,11 @@ internal class KeyboardIndicationInstance(
     private val focusedState: State<Boolean>,
 ) : IndicationInstance {
     override fun ContentDrawScope.drawIndication() {
-        drawContent()
         if (pressedState.value) {
             drawRoundRect(color = pressed, size = size, cornerRadius = CornerRadius(corners.toPx()))
         } else if (hoveredState.value || focusedState.value) {
             drawRoundRect(color = hovered, size = size, cornerRadius = CornerRadius(corners.toPx()))
         }
+        drawContent()
     }
 }

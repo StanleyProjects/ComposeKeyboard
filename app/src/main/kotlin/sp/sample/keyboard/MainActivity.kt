@@ -12,7 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import sp.ax.jc.keyboard.Keyboard
+import sp.ax.jc.keyboard.KeyboardColors
 
 internal class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +45,21 @@ internal class MainActivity : AppCompatActivity() {
                     Keyboard(
                         modifier = Modifier
                             .fillMaxWidth(),
+                        enabled = true,
+                        onClick = { char ->
+                            showToast("Char: \"$char\"")
+                        },
+                    )
+                    Keyboard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Black),
+                        fontSize = 12.sp,
+                        colors = KeyboardColors(
+                            text = Color.White,
+                            pressed = Color.DarkGray,
+                        ),
+                        corners = 2.dp,
                         enabled = true,
                         onClick = { char ->
                             showToast("Char: \"$char\"")
