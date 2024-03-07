@@ -122,9 +122,9 @@ private fun KeyboardRow(
 @Composable
 fun Keyboard(
     modifier: Modifier = Modifier,
-    indication: KeyboardIndication = LocalKeyboardStyle.current.indication,
     fontSize: TextUnit = LocalKeyboardStyle.current.fontSize,
     textColor: Color = LocalKeyboardStyle.current.textColor,
+    corners: Dp = LocalKeyboardStyle.current.corners,
     enabled: Boolean = true,
     onClick: (Char) -> Unit,
 ) {
@@ -141,6 +141,13 @@ fun Keyboard(
         fontWeight = FontWeight.Bold,
         fontFamily = FontFamily.Monospace,
     )
+    val indication = remember(corners) {
+        KeyboardIndication(
+            pressed = textColor.copy(alpha = 0.25f), // todo
+            hovered = textColor.copy(alpha = 0.25f), // todo
+            corners = corners,
+        )
+    }
     Box(modifier = modifier) {
         Column(
             modifier = Modifier.padding(4.dp),

@@ -11,7 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 
-class KeyboardIndication(
+internal class KeyboardIndication(
     private val pressed: Color,
     private val hovered: Color,
     private val corners: Dp,
