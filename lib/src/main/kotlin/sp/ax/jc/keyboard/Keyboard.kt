@@ -2,19 +2,26 @@ package sp.ax.jc.keyboard
 
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -23,6 +30,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -38,6 +46,7 @@ private fun KeyboardRow(
         modifier = Modifier
             .fillMaxWidth()
             .height(height),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         for (char in chars) {
             val interactionSource = remember { MutableInteractionSource() }
@@ -46,34 +55,45 @@ private fun KeyboardRow(
                 enabled = enabled,
                 interactionSource = interactionSource,
             )
-            BasicText(
+            Box(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(1f)
-                    .indication(interactionSource = interactionSource, indication = indication)
-                    .pointerInput(interactionSource, enabled) {
-                        detectTapGestures(
-                            onPress = { offset ->
-                                if (enabled) {
-                                    onPress(
-                                        offset = offset,
-                                        lastPressState = lastPressState,
-                                        interactionSource = interactionSource,
-                                    )
-                                }
-                            },
-                            onLongPress = {
-                                if (enabled) onClickState.value(char.uppercaseChar())
-                            },
-                            onTap = {
-                                if (enabled) onClickState.value(char)
-                            },
-                        )
-                    }
-                    .wrapContentHeight(),
-                text = char.toString(),
-                style = textStyle,
-            )
+                    .weight(1f),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .width(height)
+                        .align(Alignment.Center)
+                        .indication(interactionSource = interactionSource, indication = indication)
+                        .pointerInput(interactionSource, enabled) {
+                            detectTapGestures(
+                                onPress = { offset ->
+                                    if (enabled) {
+                                        onPress(
+                                            offset = offset,
+                                            lastPressState = lastPressState,
+                                            interactionSource = interactionSource,
+                                        )
+                                    }
+                                },
+                                onLongPress = {
+                                    if (enabled) onClickState.value(char.uppercaseChar())
+                                },
+                                onTap = {
+                                    if (enabled) onClickState.value(char)
+                                },
+                            )
+                        },
+                ) {
+                    BasicText(
+                        modifier = Modifier
+                            .align(Alignment.Center),
+                        text = char.toString(),
+                        style = textStyle,
+                    )
+                }
+            }
         }
     }
 }
@@ -82,6 +102,7 @@ private fun KeyboardRow(
 fun Keyboard(
     modifier: Modifier = Modifier,
     indication: KeyboardIndication = LocalKeyboardStyle.current.indication,
+    fontSize: TextUnit = LocalKeyboardStyle.current.fontSize,
     textColor: Color = LocalKeyboardStyle.current.textColor,
     enabled: Boolean = true,
     onClick: (Char) -> Unit,
@@ -94,20 +115,27 @@ fun Keyboard(
     )
     val textStyle = TextStyle(
         color = textColor,
+        fontSize = fontSize,
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
         fontFamily = FontFamily.Monospace,
     )
-    Column(modifier = modifier) {
-        for (chars in rows) {
-            KeyboardRow(
-                indication = indication,
-                height = 48.dp,
-                enabled = enabled,
-                chars = chars,
-                onClick = onClick,
-                textStyle = textStyle,
-            )
+    Box(modifier = modifier) {
+        Column(
+            modifier = Modifier.padding(4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            for (chars in rows) {
+                KeyboardRow(
+                    indication = indication,
+                    height = 42.dp,
+                    enabled = enabled,
+                    chars = chars,
+                    onClick = onClick,
+                    textStyle = textStyle,
+                )
+            }
+
         }
     }
 }
