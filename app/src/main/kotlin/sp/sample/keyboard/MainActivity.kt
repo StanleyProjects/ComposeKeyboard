@@ -40,7 +40,8 @@ internal class MainActivity : AppCompatActivity() {
                             .weight(1f),
                     )
                     Keyboard(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         enabled = true,
                         onClick = { char ->
                             showToast("Char: \"$char\"")

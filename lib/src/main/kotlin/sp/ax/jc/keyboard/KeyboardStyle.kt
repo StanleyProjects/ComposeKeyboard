@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.sp
 
 data class KeyboardStyle(
     val fontSize: TextUnit,
-    val textColor: Color,
+    val colors: KeyboardColors,
     val corners: Dp,
 )
 
@@ -17,7 +17,10 @@ val LocalKeyboardStyle = staticCompositionLocalOf {
     val textColor = Color.Black
     KeyboardStyle(
         fontSize = 15.sp,
-        textColor = textColor,
+        colors = KeyboardColors(
+            text = textColor,
+            pressed = textColor.copy(alpha = 0.25f),
+        ),
         corners = 16.dp,
     )
 }

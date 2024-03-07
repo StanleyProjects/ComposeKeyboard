@@ -123,7 +123,7 @@ private fun KeyboardRow(
 fun Keyboard(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = LocalKeyboardStyle.current.fontSize,
-    textColor: Color = LocalKeyboardStyle.current.textColor,
+    colors: KeyboardColors = LocalKeyboardStyle.current.colors,
     corners: Dp = LocalKeyboardStyle.current.corners,
     enabled: Boolean = true,
     onClick: (Char) -> Unit,
@@ -135,7 +135,7 @@ fun Keyboard(
         charArrayOf('z', 'x', 'c', 'v', 'b', 'n', 'm'),
     )
     val textStyle = TextStyle(
-        color = textColor,
+        color = colors.text,
         fontSize = fontSize,
         textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold,
@@ -143,8 +143,8 @@ fun Keyboard(
     )
     val indication = remember(corners) {
         KeyboardIndication(
-            pressed = textColor.copy(alpha = 0.25f), // todo
-            hovered = textColor.copy(alpha = 0.25f), // todo
+            pressed = colors.pressed,
+            hovered = colors.pressed,
             corners = corners,
         )
     }
