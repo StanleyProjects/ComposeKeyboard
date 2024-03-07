@@ -127,6 +127,8 @@ fun Keyboard(
     enabled: Boolean = true,
     onClick: (Char) -> Unit,
 ) {
+    // todo new line
+    // todo backspace
     val rows = listOf(
         charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
         charArrayOf('q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'),
