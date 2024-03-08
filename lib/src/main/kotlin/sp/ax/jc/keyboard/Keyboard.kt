@@ -1,5 +1,6 @@
 package sp.ax.jc.keyboard
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.Indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -26,31 +30,55 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
 @Composable
-private fun KeyboardSpaceRow(
+private fun KeyboardBottomRow(
     indication: Indication,
     height: Dp,
+    width: Dp,
     enabled: Boolean,
-    onClick: () -> Unit,
+    onSpace: () -> Unit,
+    onBackspace: (isLongClick: Boolean) -> Unit,
+    backspacePainter: Painter,
     textStyle: TextStyle,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(height),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Spacer(modifier = Modifier.weight(1f))
-        val interactionSource = remember { MutableInteractionSource() }
         Box(
             modifier = Modifier
                 .fillMaxHeight()
-                .weight(3f)
+                .width(width)
                 .clicks(
                     enabled = enabled,
-                    interactionSource = interactionSource,
+                    interactionSource = remember { MutableInteractionSource() },
                     indication = indication,
                     onClick = {
-                        onClick()
+                        onBackspace(false)
                     },
+                    onLongClick = {
+                        onBackspace(true)
+                    },
+                ),
+        ) {
+            Image(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                painter = backspacePainter,
+                contentDescription = "keyboard:backspace", // todo
+                colorFilter = ColorFilter.tint(textStyle.color),
+            )
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .clicks(
+                    enabled = enabled,
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = indication,
+                    onClick = onSpace,
                     onLongClick = {
                         // noop
                     },
@@ -63,7 +91,11 @@ private fun KeyboardSpaceRow(
                 style = textStyle,
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(width),
+        )
     }
 }
 
@@ -71,6 +103,7 @@ private fun KeyboardSpaceRow(
 private fun KeyboardRow(
     indication: Indication,
     height: Dp,
+    width: Dp,
     enabled: Boolean,
     chars: CharArray,
     onClick: (Char) -> Unit,
@@ -92,7 +125,7 @@ private fun KeyboardRow(
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .width(height)
+                        .width(width)
                         .align(Alignment.Center)
                         .clicks(
                             enabled = enabled,
@@ -126,7 +159,10 @@ fun Keyboard(
     corners: Dp = LocalKeyboardStyle.current.corners,
     enabled: Boolean = true,
     onClick: (Char) -> Unit,
+    onBackspace: (isLongClick: Boolean) -> Unit,
+    backspacePainter: Painter = painterResource(id = LocalKeyboardStyle.current.backspaceIconId),
 ) {
+    // todo new line
     val rows = listOf(
         charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
         charArrayOf('q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'),
@@ -156,19 +192,23 @@ fun Keyboard(
                 KeyboardRow(
                     indication = indication,
                     height = 42.dp,
+                    width = 42.dp,
                     enabled = enabled,
                     chars = chars,
                     onClick = onClick,
                     textStyle = textStyle,
                 )
             }
-            KeyboardSpaceRow(
+            KeyboardBottomRow(
                 indication = indication,
                 height = 42.dp,
+                width = 42.dp,
                 enabled = enabled,
-                onClick = {
+                onSpace = {
                     onClick(' ')
                 },
+                onBackspace = onBackspace,
+                backspacePainter = backspacePainter,
                 textStyle = textStyle,
             )
         }

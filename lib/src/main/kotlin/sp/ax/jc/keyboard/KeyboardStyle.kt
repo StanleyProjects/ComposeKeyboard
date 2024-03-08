@@ -1,5 +1,6 @@
 package sp.ax.jc.keyboard
 
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -11,6 +12,8 @@ data class KeyboardStyle(
     val fontSize: TextUnit,
     val colors: KeyboardColors,
     val corners: Dp,
+    @DrawableRes
+    val backspaceIconId: Int,
 )
 
 val LocalKeyboardStyle = staticCompositionLocalOf {
@@ -22,5 +25,6 @@ val LocalKeyboardStyle = staticCompositionLocalOf {
             pressed = textColor.copy(alpha = 0.25f),
         ),
         corners = 16.dp,
+        backspaceIconId = android.R.drawable.ic_input_delete,
     )
 }
