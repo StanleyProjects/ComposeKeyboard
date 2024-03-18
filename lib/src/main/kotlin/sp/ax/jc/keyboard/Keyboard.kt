@@ -29,6 +29,30 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 
+object Keyboard {
+    val en = listOf(
+        charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
+        charArrayOf('q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'),
+        charArrayOf('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'),
+        charArrayOf('z', 'x', 'c', 'v', 'b', 'n', 'm'),
+    )
+    val ru = listOf(
+        charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
+        charArrayOf('й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х', 'ъ'),
+        charArrayOf('ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э', 'ё'),
+        charArrayOf('я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю'),
+    )
+
+    val special = listOf(
+        33..40,
+        41..47,
+        58..64,
+        (91..96) + (123..126),
+    ).map { ints ->
+        ints.map { it.toChar() }.toCharArray()
+    }
+}
+
 @Composable
 private fun KeyboardBottomRow(
     indication: Indication,
@@ -87,7 +111,7 @@ private fun KeyboardBottomRow(
             BasicText(
                 modifier = Modifier
                     .align(Alignment.Center),
-                text = "space",
+                text = "spacebar",
                 style = textStyle,
             )
         }
@@ -154,6 +178,7 @@ private fun KeyboardRow(
 @Composable
 fun Keyboard(
     modifier: Modifier = Modifier,
+    rows: List<CharArray>,
     fontSize: TextUnit = LocalKeyboardStyle.current.fontSize,
     colors: KeyboardColors = LocalKeyboardStyle.current.colors,
     corners: Dp = LocalKeyboardStyle.current.corners,
@@ -165,12 +190,6 @@ fun Keyboard(
     // todo new line
     // todo TextFieldValue util
     // todo space text lang
-    val rows = listOf(
-        charArrayOf('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'),
-        charArrayOf('q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'),
-        charArrayOf('a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'),
-        charArrayOf('z', 'x', 'c', 'v', 'b', 'n', 'm'),
-    )
     val textStyle = TextStyle(
         color = colors.text,
         fontSize = fontSize,

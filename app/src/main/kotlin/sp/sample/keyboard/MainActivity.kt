@@ -52,6 +52,7 @@ internal class MainActivity : AppCompatActivity() {
                     Keyboard(
                         modifier = Modifier
                             .fillMaxWidth(),
+                        rows = Keyboard.en,
                         enabled = true,
                         onClick = { char ->
                             textState.value += char
@@ -73,6 +74,27 @@ internal class MainActivity : AppCompatActivity() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(Color.Black),
+                        rows = Keyboard.ru,
+                        fontSize = 12.sp,
+                        colors = KeyboardColors(
+                            text = Color.White,
+                            pressed = Color.DarkGray,
+                        ),
+                        corners = 2.dp,
+                        enabled = true,
+                        onClick = { char ->
+                            showToast("Char: \"$char\"")
+                        },
+                        onBackspace = {
+                            // noop
+                        },
+                        backspacePainter = painterResource(id = R.drawable.ic_delete),
+                    )
+                    Keyboard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.Black),
+                        rows = Keyboard.special,
                         fontSize = 12.sp,
                         colors = KeyboardColors(
                             text = Color.White,
